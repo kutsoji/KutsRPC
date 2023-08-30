@@ -1,0 +1,22 @@
+[build]
+target = "./ui/index.html"
+
+[watch]
+ignore = ["./src-tauri"]
+
+[serve]
+address = "127.0.0.1"
+port = 8080
+open = false
+
+# Windows
+[[hooks]]
+stage = "pre_build"
+command = "cmd"
+command_arguments = ["/c", "npx tailwindcss -c ./ui/tailwind.config.js -i ./ui/input.css -o ./ui/style/output.css"]
+
+# Linux
+# [[hooks]]
+# stage = "pre_build"
+# command = "sh"
+# command_arguments = ["-c", "npx tailwindcss -c ./ui/tailwind.config.js -i ./ui/input.css -o ./ui/style/output.css"]

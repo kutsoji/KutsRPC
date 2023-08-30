@@ -1,0 +1,10 @@
+[workspace]
+members = [ "src-tauri", "ui" ]
+resolver = "2"
+
+[workspace.metadata]
+name = "kutsrpc"
+creator = "kutsoji - https://github.com/kutsoji"
+repository = "https://github.com/kutsoji/KutsRPC"
+version = "0.1.0"
+description = "custom rich presence maker for discord client, with arRPC support!"
