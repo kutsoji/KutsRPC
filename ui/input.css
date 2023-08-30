@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+       @apply font-code font-semibold bg-dc_black unselectable;   
+   }
+}
+
+@layer components {
+    .sidebaricons {
+        @apply flex justify-center items-center mt-1.5 mb-1.5 ml-4 w-[54px] h-[54px] 
+        rounded-[1.7rem] duration-150 hover:rounded-[1.1rem] transition-all ease-linear 
+        bg-dc_nav hover:bg-dc_green text-dc_green hover:text-dc_white
+        cursor-pointer;
+    }
+
+    .sidebar-hr {
+        @apply border w-[32px] ml-[1.64rem] border-dc_nav rounded-lg;
+    }
+
+    .vertical-hr {
+     @apply w-0.5 h-[95%] bg-dc_nav ml-0 absolute top-1/2 transform -translate-y-1/2 rounded-lg;
+}
+.tooltip {
+  @apply invisible absolute rounded shadow-lg bg-dc_black text-dc_gray whitespace-normal text-center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-100% - 8px));
+}
+
+.tooltip::before {
+  @apply absolute w-0 h-0 block;
+  content: "";
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  @apply border-t-dc_black border-t-[5px]
+}
+
+.has-tooltip {
+  @apply relative inline-block;
+}
+
+.has-tooltip:hover .tooltip {
+  @apply visible z-40;
+}
+
+}
+
+.unselectable {
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+* {
+    scrollbar-width: none;
+}
+
+* {
+    -ms-overflow-style: none;
+}
