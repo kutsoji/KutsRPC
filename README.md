@@ -1,2 +1,2 @@
 # KutsRPC
-Custom rich presence maker for discord client
+Custom rich presence maker for discord
