@@ -14,3 +14,4 @@ Cargo.lock
 *.pdb
 
 /ui/dist
+/ui/style/output.css
