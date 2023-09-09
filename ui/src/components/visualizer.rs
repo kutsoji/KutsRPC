@@ -8,7 +8,7 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
         <div class="p-20 relative">
             <div class="bg-dc_blue rounded-t-lg w-[300px] h-[70px] z-10"></div>
             <div class="flex items-end justify-start absolute bottom-[45px] left-[100px] w-[90px] h-[90px]">
-                <img draggable=false src="../../assets/imgs/test.png" alt="Avatar" class="rounded-full border-solid border-4 border-dc_black z-10 w-full h-full"/>
+                <img draggable="false" src="../../assets/imgs/test.png" alt="Avatar" class="rounded-full border-solid border-4 border-dc_black z-10 w-full h-full"/>
                 <div class="rounded-full bg-dc_green w-[18px] h-[18px] border-solid border-4 border-dc_black absolute bottom-[10px] left-[75px] transform translate-x-[-50%] translate-y-[45%] z-20"></div>
             </div>
             <div class="absolute bottom-0 left-[100px]">
@@ -19,7 +19,7 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
             </div>
             <div class="absolute bottom-[-125px] left-[100px] grid grid-cols-8 grid-rows-4 gap-x-2 w-[300px] text-xs font-normal">
                 <div class="row-span-4 col-span-2 has-tooltip">
-                <img src="../../assets/imgs/test.png" alt="Avatar" class="rounded-lg z-10 w-full h-full"/>
+                <img draggable="false" src="../../assets/imgs/test.png" alt="Avatar" class="rounded-lg z-10 w-full h-full"/>
                         <span class="tooltip p-2">info</span>
                 </div>
                 <div class="has-tooltip absolute bottom-[3px] left-[65px] z-20 transform translate-x-[-50%] translate-y-[45%]">
