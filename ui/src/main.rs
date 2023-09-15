@@ -10,21 +10,21 @@ use components::{
 
 fn main() {
     mount_to_body(|cx| {
-        view! { cx, <App/>}
+        view! { cx, <App/> }
     })
 }
 
 #[component]
 fn App(cx: Scope) -> impl IntoView {
-    view! {cx,
+    view! { cx,
         <div class="flex flex-col h-screen">
-          <Header/>
+            <Header/>
 
-          <div class="flex-grow grid grid-cols-14 overflow-hidden">
-          <Sidebar/>
-          <Main />
-          <Visualizer />
-          </div>
+            <div class="flex-grow grid grid-cols-14 overflow-hidden">
+                <Sidebar/>
+                <Main/>
+                <Visualizer/>
+            </div>
         </div>
     }
 }

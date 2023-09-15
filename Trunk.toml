@@ -13,10 +13,10 @@ open = false
 [[hooks]]
 stage = "pre_build"
 command = "cmd"
-command_arguments = ["/c", "npx tailwindcss -c ./ui/tailwind.config.js -i ./ui/input.css -o ./ui/style/output.css"]
+command_arguments = ["/c", "npx tailwindcss -c ./ui/tailwind.config.js -i ./ui/input.css -o ./ui/style/output.css && leptosfmt ./ui/"]
 
 # Linux
 # [[hooks]]
 # stage = "pre_build"
 # command = "sh"
-# command_arguments = ["-c", "npx tailwindcss -c ./ui/tailwind.config.js -i ./ui/input.css -o ./ui/style/output.css"]
+# command_arguments = ["-c", "npx tailwindcss -c ./ui/tailwind.config.js -i ./ui/input.css -o ./ui/style/output.css && leptosfmt ./ui/"]
