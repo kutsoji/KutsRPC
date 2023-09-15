@@ -39,7 +39,7 @@ pub fn Input(
                 </div>
             </div>
             <input
-                type=input_type
+                type={input_type}
                 class="w-full bg-dc_nav rounded p-2 h-[36px] outline-none border-[1px] border-[#68696b] hover:border-dc_blue text-dc_white font-normal"
             />
         </div>
