@@ -4,7 +4,10 @@
 
 @layer base {
   html {
-    @apply font-code font-semibold bg-dc_black unselectable;
+    @apply font-code font-semibold bg-dc_black;
+  }
+  * {
+    @apply unselectable;
   }
 }
 
@@ -68,6 +71,10 @@
 
 * {
   -ms-overflow-style: none;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: grayscale(1) brightness(0.9) sepia(0.1) saturate(0) hue-rotate(0deg) invert(0.7);
 }
 
 @font-face {
