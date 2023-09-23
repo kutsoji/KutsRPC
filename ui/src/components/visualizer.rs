@@ -1,9 +1,22 @@
+use crate::GlobalState;
 use leptos::*;
 
 #[component]
 pub fn Visualizer(cx: Scope) -> impl IntoView {
+    let gs = use_context::<GlobalState>(cx).expect("to have found the GlobalState provided");
+    let state = gs.state;
+    let details = gs.details;
+    let timestamp = gs.timestamp;
+    let large_img_key = gs.large_img_key;
+    let large_img_txt = gs.large_img_txt;
+    let small_img_key = gs.small_img_key;
+    let small_img_txt = gs.small_img_txt;
+    let first_btn_txt = gs.first_btn_txt;
+    let first_btn_url = gs.first_btn_url;
+    let second_btn_txt = gs.second_btn_txt;
+    let second_btn_url = gs.second_btn_url;
     view! { cx,
-        <div class="col-span-5 h-full">
+        <div class="col-span-5 h-full ">
             <div class="vertical-hr"></div>
             <div class="p-20 relative">
                 <div class="bg-dc_blue rounded-t-lg w-[300px] h-[70px] z-10"></div>
@@ -14,7 +27,7 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
                         alt="Avatar"
                         class="rounded-full border-solid border-4 border-dc_black z-10 w-full h-full"
                     />
-                    <div class="rounded-full bg-dc_green w-[18px] h-[18px] border-solid border-4 border-dc_black absolute bottom-[10px] left-[75px] transform translate-x-[-50%] translate-y-[45%] z-20"></div>
+                    <div class="rounded-full bg-dc_green w-[18px] h-[18px] border-solid border-2 border-dc_black absolute bottom-[10px] left-[75px] transform translate-x-[-50%] translate-y-[45%] z-20"></div>
                 </div>
                 <div class="absolute bottom-0 left-[100px]">
                     <span class="text-dc_white font-bold">kutsoji</span>
@@ -23,31 +36,129 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
                     <span class="text-dc_gray font-semibold text-sm">PLAYING A GAME</span>
                 </div>
                 <div class="absolute bottom-[-125px] left-[100px] grid grid-cols-8 grid-rows-4 gap-x-2 w-[300px] text-xs font-normal">
-                    <div class="row-span-4 col-span-2 has-tooltip">
-                        <img
-                            draggable="false"
-                            src="../../assets/imgs/test.png"
-                            alt="Avatar"
-                            class="rounded-lg z-10 w-full h-full"
-                        />
-                        <span class="tooltip p-2">info</span>
-                    </div>
-                    <div class="has-tooltip absolute bottom-[3px] left-[65px] z-20 transform translate-x-[-50%] translate-y-[45%]">
-                        <div class="rounded-full bg-dc_green w-[20px] h-[20px] border-solid border-2 border-dc_black"></div>
-                        <span class="tooltip p-2">info</span>
-                    </div>
+                    {move || {
+                        if large_img_key().is_some() {
+                            view! { cx,
+                                <div class="row-span-4 col-span-2 has-tooltip">
+                                    <img
+                                        prop:src={move || {
+                                            if large_img_key() == Some("".to_owned())
+                                                || large_img_key() == None
+                                            {
+                                                "../../assets/imgs/test.png".to_owned()
+                                            } else {
+                                                large_img_key().unwrap()
+                                            }
+                                        }}
+
+                                        class="rounded-lg z-10 w-[70px] h-[70px]"
+                                    />
+                                    <span class="tooltip p-2">{large_img_txt}</span>
+                                </div>
+                            }
+                                .into_view(cx)
+                        } else {
+                            view! {
+                                cx,
+                            }
+                                .into_view(cx)
+                        }
+                    }}
+                    {move || {
+                        if small_img_key().is_some() && large_img_key().is_some() {
+                            view! { cx,
+                                <div class="has-tooltip absolute bottom-[3px] left-[65px] z-20 transform translate-x-[-50%] translate-y-[45%]">
+                                    <img
+                                        prop:src={move || {
+                                            if small_img_key() == Some("".to_owned())
+                                                || small_img_key() == None
+                                            {
+                                                "../../assets/imgs/test.png".to_owned()
+                                            } else {
+                                                small_img_key().unwrap()
+                                            }
+                                        }}
+
+                                        class="bg-dc_nav rounded-full w-[24px] h-[24px] border-solid border-2 border-dc_black"
+                                    />
+                                    <span class="tooltip p-2">{small_img_txt}</span>
+                                </div>
+                            }
+                                .into_view(cx)
+                        } else {
+                            view! {
+                                cx,
+                            }
+                                .into_view(cx)
+                        }
+                    }}
                     <span class="text-dc_white col-span-6 font-semibold">KutsRPC</span>
-                    <span class="text-dc_white col-span-6">Competitive</span>
-                    <span class="text-dc_white col-span-6">Paying Solo (1 of 15)</span>
-                    <span class="text-dc_white col-span-6">00:00 left</span>
+                    {move || {
+                        if details().is_some() {
+                            view! { cx, <span class="text-dc_white col-span-6">{details}</span> }
+                                .into_view(cx)
+                        } else {
+                            view! {
+                                cx,
+                            }
+                                .into_view(cx)
+                        }
+                    }}
+                    {move || {
+                        if state().is_some() {
+                            view! { cx, <span class="text-dc_white col-span-6">{state}</span> }
+                                .into_view(cx)
+                        } else {
+                            view! {
+                                cx,
+                            }
+                                .into_view(cx)
+                        }
+                    }}
+                    {move || {
+                        if timestamp().is_some() {
+                            view! { cx, <span class="text-dc_white col-span-6">{timestamp}</span> }
+                                .into_view(cx)
+                        } else {
+                            view! {
+                                cx,
+                            }
+                                .into_view(cx)
+                        }
+                    }}
+
                 </div>
                 <div class="grid grid-cols-2 gap-x-2 absolute left-[100px] bottom-[-175px] w-[250px]">
-                    <button class="flex justify-center items-center rounded-[4px] h-[30px] p-2 w-full transition-colors duration-500 bg-dc_btn outline-none hover:bg-[#676A75] text-sm font-medium text-dc_white">
-                        <span>discord</span>
-                    </button>
-                    <button class="flex justify-center items-center rounded-[4px] h-[30px] p-2 w-full transition-colors duration-500 bg-dc_btn outline-none hover:bg-[#676A75] text-sm font-medium text-dc_white">
-                        <span>github</span>
-                    </button>
+                    <Show
+                        when={move || {
+                            first_btn_txt().is_some() && first_btn_url().is_some_and(|s| s != "")
+                        }}
+
+                        fallback={|_| ()}
+                    >
+                        <Show
+                            when={move || {
+                                second_btn_txt().is_some()
+                                    && second_btn_url().is_some_and(|s| s != "")
+                            }}
+
+                            fallback={move |cx| {
+                                view! { cx,
+                                    <button class="col-span-2 flex justify-center items-center rounded-[4px] h-[30px] p-2 w-full transition-colors duration-500 bg-dc_btn outline-none hover:bg-[#676A75] text-sm font-medium text-dc_white">
+                                        <span>{first_btn_txt}</span>
+                                    </button>
+                                }
+                            }}
+                        >
+
+                            <button class="flex justify-center items-center rounded-[4px] h-[30px] p-2 w-full transition-colors duration-500 bg-dc_btn outline-none hover:bg-[#676A75] text-sm font-medium text-dc_white">
+                                <span>{first_btn_txt}</span>
+                            </button>
+                            <button class="flex justify-center items-center rounded-[4px] h-[30px] p-2 w-full transition-colors duration-500 bg-dc_btn outline-none hover:bg-[#676A75] text-sm font-medium text-dc_white">
+                                <span>{second_btn_txt}</span>
+                            </button>
+                        </Show>
+                    </Show>
                 </div>
 
             </div>

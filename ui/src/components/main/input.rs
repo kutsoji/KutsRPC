@@ -1,14 +1,15 @@
 use leptos::*;
-
 #[component]
 pub fn Input(
     cx: Scope,
     label: &'static str,
     info: &'static str,
-    input_type: &'static str,
+    #[prop(optional)] main_class: &'static str,
+    #[prop(optional)] input_value: MaybeSignal<Option<String>>,
+    #[prop(optional)] on_input: Option<Box<dyn Fn(ev::Event)>>,
 ) -> impl IntoView {
     view! { cx,
-        <div class="col-span-1 space-y-1 text-xs">
+        <div class={"col-span-1 space-y-1 text-xs ".to_owned() + main_class}>
             <div class="flex items-center space-x-2">
                 <span class="font-semibold text-dc_gray mt-1">{label}</span>
                 <div class="has-tooltip">
@@ -21,15 +22,14 @@ pub fn Input(
                         viewBox="0 0 93.936 93.936"
                         xml:space="preserve"
                     >
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g stroke-width="0"></g>
                         <g
-                            id="SVGRepo_tracerCarrier"
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke="#CCCCCC"
                             stroke-width="2.81808"
                         ></g>
-                        <g id="SVGRepo_iconCarrier">
+                        <g>
                             <g>
                                 <path d="M80.179,13.758c-18.342-18.342-48.08-18.342-66.422,0c-18.342,18.341-18.342,48.08,0,66.421 c18.342,18.342,48.08,18.342,66.422,0C98.521,61.837,98.521,32.099,80.179,13.758z M44.144,83.117 c-4.057,0-7.001-3.071-7.001-7.305c0-4.291,2.987-7.404,7.102-7.404c4.123,0,7.001,3.044,7.001,7.404 C51.246,80.113,48.326,83.117,44.144,83.117z M54.73,44.921c-4.15,4.905-5.796,9.117-5.503,14.088l0.097,2.495 c0.011,0.062,0.017,0.125,0.017,0.188c0,0.58-0.47,1.051-1.05,1.051c-0.004-0.001-0.008-0.001-0.012,0h-7.867 c-0.549,0-1.005-0.423-1.047-0.97l-0.202-2.623c-0.676-6.082,1.508-12.218,6.494-18.202c4.319-5.087,6.816-8.865,6.816-13.145 c0-4.829-3.036-7.536-8.548-7.624c-3.403,0-7.242,1.171-9.534,2.913c-0.264,0.201-0.607,0.264-0.925,0.173 s-0.575-0.327-0.693-0.636l-2.42-6.354c-0.169-0.442-0.02-0.943,0.364-1.224c3.538-2.573,9.441-4.235,15.041-4.235 c12.36,0,17.894,7.975,17.894,15.877C63.652,33.765,59.785,38.919,54.73,44.921z"></path>
                             </g>
@@ -39,7 +39,9 @@ pub fn Input(
                 </div>
             </div>
             <input
-                type={input_type}
+                on:input={on_input.unwrap_or(Box::new(|_e: ev::Event| {}))}
+                prop:value={move || input_value().or(Some("".to_owned()))}
+
                 class="w-full bg-dc_nav rounded p-2 h-[36px] outline-none border-[1px] border-[#68696b] hover:border-dc_blue text-dc_white font-normal"
             />
         </div>
