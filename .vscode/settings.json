@@ -7,4 +7,5 @@
         "rust": "html",
         "*.rs": "html"
     },
+    "rust-analyzer.showUnlinkedFileNotification": false,
 }
