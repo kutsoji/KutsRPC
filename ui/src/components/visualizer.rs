@@ -1,4 +1,11 @@
-use crate::GlobalState;
+use crate::{
+    components::error_modal::*,
+    utils::time::{
+        self,
+        current_timestamp,
+    },
+    GlobalState,
+};
 use leptos::*;
 
 #[component]
@@ -15,6 +22,13 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
     let first_btn_url = gs.first_btn_url;
     let second_btn_txt = gs.second_btn_txt;
     let second_btn_url = gs.second_btn_url;
+    let actual_timestamp =
+        create_resource(cx, timestamp, move |t| async move { time::get_timestamp(t).await });
+    let current_timestamp = create_rw_signal(cx, time::current_timestamp());
+    set_interval(
+        move || current_timestamp.update(|t| *t += 1),
+        std::time::Duration::from_millis(1000),
+    );
     view! { cx,
         <div class="col-span-5 h-full ">
             <div class="vertical-hr"></div>
@@ -95,7 +109,11 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
                     <span class="text-dc_white col-span-6 font-semibold">KutsRPC</span>
                     {move || {
                         if details().is_some() {
-                            view! { cx, <span class="text-dc_white col-span-6">{details}</span> }
+                            view! { cx,
+                                <span class="text-dc_white col-span-6 truncate w-[225px]">
+                                    {details}
+                                </span>
+                            }
                                 .into_view(cx)
                         } else {
                             view! {
@@ -106,7 +124,11 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
                     }}
                     {move || {
                         if state().is_some() {
-                            view! { cx, <span class="text-dc_white col-span-6">{state}</span> }
+                            view! { cx,
+                                <span class="text-dc_white col-span-6 truncate w-[225px]">
+                                    {state}
+                                </span>
+                            }
                                 .into_view(cx)
                         } else {
                             view! {
@@ -117,7 +139,34 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
                     }}
                     {move || {
                         if timestamp().is_some() {
-                            view! { cx, <span class="text-dc_white col-span-6">{timestamp}</span> }
+                            view! { cx,
+                                <span class="text-dc_white col-span-6 truncate w-[225px]">
+                                    {move || actual_timestamp
+                                        .with(
+                                            cx,
+                                            |t| match t {
+                                                Ok(value) => {
+                                                    value
+                                                        .clone()
+                                                        .map(|unix_time| time::get_time(current_timestamp(), unix_time))
+                                                        .into_view(cx)
+                                                }
+                                                Err(e) => {
+
+                                                    view! { cx,
+                                                        <ErrorModal
+                                                            title={"Timestamp Selection Error".to_string()}
+                                                            description={e.to_string()}
+                                                            button_title={"OK".to_string()}
+                                                            on_click={move |_| {timestamp.set(None)}}
+                                                        />
+                                                    }
+                                                }
+                                            },
+                                        )}
+
+                                </span>
+                            }
                                 .into_view(cx)
                         } else {
                             view! {
