@@ -8,6 +8,8 @@ use components::{
     visualizer::*,
 };
 mod utils;
+#[macro_use]
+mod invoke;
 
 fn main() {
     mount_to_body(|cx| {
