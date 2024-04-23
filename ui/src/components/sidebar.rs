@@ -1,8 +1,8 @@
 use leptos::*;
 
 #[component]
-pub fn Sidebar(cx: Scope) -> impl IntoView {
-    view! { cx,
+pub fn Sidebar() -> impl IntoView {
+    view! {
         <div class="col-span-1 h-full overflow-auto">
             <div class="sidebaricons bg-dc_nav hover:bg-dc_blue group">
                 <svg

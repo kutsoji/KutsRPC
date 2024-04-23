@@ -9,8 +9,8 @@ use crate::{
 use leptos::*;
 
 #[component]
-pub fn Visualizer(cx: Scope) -> impl IntoView {
-    let gs = use_context::<GlobalState>(cx).expect("to have found the GlobalState provided");
+pub fn Visualizer() -> impl IntoView {
+    let gs = use_context::<GlobalState>().expect("to have found the GlobalState provided");
     let state = gs.state;
     let details = gs.details;
     let timestamp = gs.timestamp;
@@ -23,13 +23,13 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
     let second_btn_txt = gs.second_btn_txt;
     let second_btn_url = gs.second_btn_url;
     let actual_timestamp =
-        create_resource(cx, timestamp, move |t| async move { time::get_timestamp(t).await });
-    let current_timestamp = create_rw_signal(cx, time::current_timestamp());
+        create_resource(timestamp, move |t| async move { time::get_timestamp(t).await });
+    let current_timestamp = create_rw_signal(time::current_timestamp());
     set_interval(
         move || current_timestamp.update(|t| *t += 1),
         std::time::Duration::from_millis(1000),
     );
-    view! { cx,
+    view! {
         <div class="col-span-5 h-full ">
             <div class="vertical-hr"></div>
             <div class="p-20 relative">
@@ -52,7 +52,7 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
                 <div class="absolute bottom-[-125px] left-[100px] grid grid-cols-8 grid-rows-4 gap-x-2 w-[300px] text-xs font-normal">
                     {move || {
                         if large_img_key().is_some() {
-                            view! { cx,
+                            view! {
                                 <div class="row-span-4 col-span-2 has-tooltip">
                                     <img
                                         prop:src={move || {
@@ -70,17 +70,14 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
                                     <span class="tooltip p-2">{large_img_txt}</span>
                                 </div>
                             }
-                                .into_view(cx)
+                                .into_view()
                         } else {
-                            view! {
-                                cx,
-                            }
-                                .into_view(cx)
+                            view! {}.into_view()
                         }
                     }}
                     {move || {
                         if small_img_key().is_some() && large_img_key().is_some() {
-                            view! { cx,
+                            view! {
                                 <div class="has-tooltip absolute bottom-[3px] left-[65px] z-20 transform translate-x-[-50%] translate-y-[45%]">
                                     <img
                                         prop:src={move || {
@@ -98,81 +95,75 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
                                     <span class="tooltip p-2">{small_img_txt}</span>
                                 </div>
                             }
-                                .into_view(cx)
+                                .into_view()
                         } else {
-                            view! {
-                                cx,
-                            }
-                                .into_view(cx)
+                            view! {}.into_view()
                         }
                     }}
                     <span class="text-dc_white col-span-6 font-semibold">KutsRPC</span>
                     {move || {
                         if details().is_some() {
-                            view! { cx,
+                            view! {
                                 <span class="text-dc_white col-span-6 truncate w-[225px]">
                                     {details}
                                 </span>
                             }
-                                .into_view(cx)
+                                .into_view()
                         } else {
-                            view! {
-                                cx,
-                            }
-                                .into_view(cx)
+                            view! {}.into_view()
                         }
                     }}
                     {move || {
                         if state().is_some() {
-                            view! { cx,
+                            view! {
                                 <span class="text-dc_white col-span-6 truncate w-[225px]">
                                     {state}
                                 </span>
                             }
-                                .into_view(cx)
+                                .into_view()
                         } else {
-                            view! {
-                                cx,
-                            }
-                                .into_view(cx)
+                            view! {}.into_view()
                         }
                     }}
                     {move || {
                         if timestamp().is_some() {
-                            view! { cx,
+                            view! {
                                 <span class="text-dc_white col-span-6 truncate w-[225px]">
-                                    {move || actual_timestamp
-                                        .with(
-                                            cx,
-                                            |t| match t {
-                                                Ok(value) => {
-                                                    value
-                                                        .clone()
-                                                        .map(|unix_time| time::get_time(current_timestamp(), unix_time))
-                                                        .into_view(cx)
-                                                }
-                                                Err(e) => {
-
-                                                    view! { cx,
-                                                        <ErrorModal
-                                                            title={"Timestamp Selection Error".to_string()}
-                                                            description={e.to_string()}
-                                                            button_title={"OK".to_string()}
-                                                            on_click={move |_| {timestamp.set(None)}}
-                                                        />
+                                    {move || {
+                                        actual_timestamp
+                                            .with(|ti| match ti {
+                                                Some(t) => {
+                                                    match t {
+                                                        Ok(value) => {
+                                                            value
+                                                                .clone()
+                                                                .map(|unix_time| time::get_time(
+                                                                    current_timestamp(),
+                                                                    unix_time,
+                                                                ))
+                                                                .into_view()
+                                                        }
+                                                        Err(e) => {
+                                                            view! {
+                                                                <ErrorModal
+                                                                    title={"Timestamp Selection Error".to_string()}
+                                                                    description={e.to_string()}
+                                                                    button_title={"OK".to_string()}
+                                                                    on_click={move |_| { timestamp.set(None) }}
+                                                                />
+                                                            }
+                                                        }
                                                     }
                                                 }
-                                            },
-                                        )}
+                                                None => ().into_view(),
+                                            })
+                                    }}
 
                                 </span>
                             }
-                                .into_view(cx)
+                                .into_view()
                         } else {
-                            view! {
-                                cx,
-                            }
-                                .into_view(cx)
+                            view! {}.into_view()
                         }
                     }}
 
@@ -183,7 +174,7 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
                             first_btn_txt().is_some() && first_btn_url().is_some_and(|s| s != "")
                         }}
 
-                        fallback={|_| ()}
+                        fallback={|| ()}
                     >
                         <Show
                             when={move || {
@@ -191,8 +182,8 @@ pub fn Visualizer(cx: Scope) -> impl IntoView {
                                     && second_btn_url().is_some_and(|s| s != "")
                             }}
 
-                            fallback={move |cx| {
-                                view! { cx,
+                            fallback={move || {
+                                view! {
                                     <button class="col-span-2 flex justify-center items-center rounded-[4px] h-[30px] p-2 w-full transition-colors duration-500 bg-dc_btn outline-none hover:bg-[#676A75] text-sm font-medium text-dc_white">
                                         <span>{first_btn_txt}</span>
                                     </button>

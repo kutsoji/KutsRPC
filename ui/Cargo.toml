@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-leptos = { version = "0.4.10", features = ["csr", "nightly"] }
+leptos = { version = "0.6.11", features = ["csr", "nightly"] }
 chrono = "0.4.31"
 tauri-sys = { git = "https://github.com/JonasKruckenberg/tauri-sys", features = [
   "all",

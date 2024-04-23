@@ -1,14 +1,13 @@
 use leptos::*;
 #[component]
 pub fn Input(
-    cx: Scope,
     label: &'static str,
     info: &'static str,
     #[prop(optional)] main_class: &'static str,
     #[prop(optional)] input_value: MaybeSignal<Option<String>>,
     #[prop(optional)] on_input: Option<Box<dyn Fn(ev::Event)>>,
 ) -> impl IntoView {
-    view! { cx,
+    view! {
         <div class={"col-span-1 space-y-1 text-xs ".to_owned() + main_class}>
             <div class="flex items-center space-x-2">
                 <span class="font-semibold text-dc_gray mt-1">{label}</span>

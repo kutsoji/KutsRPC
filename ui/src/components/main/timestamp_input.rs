@@ -1,14 +1,13 @@
 use leptos::*;
 #[component]
 pub fn TimestampInput<F: Fn(ev::Event) + Clone + 'static>(
-    cx: Scope,
     label: &'static str,
     info: &'static str,
     selected_option: RwSignal<Option<String>>,
     on_select: F,
 ) -> impl IntoView {
-    let custom_time: RwSignal<Option<String>> = create_rw_signal(cx, None);
-    view! { cx,
+    let custom_time: RwSignal<Option<String>> = create_rw_signal(None);
+    view! {
         <div class="space-y-1 text-xs col-span-2">
             <div class="flex items-center space-x-2">
                 <span class="font-semibold text-dc_gray mt-1">{label}</span>
@@ -40,8 +39,8 @@ pub fn TimestampInput<F: Fn(ev::Event) + Clone + 'static>(
             </div>
             <Show
                 when={move || { selected_option() == Some("Custom".to_string()) }}
-                fallback={move |cx| {
-                    view! { cx,
+                fallback={move || {
+                    view! {
                         <select
                             on:input={
                                 let callback = on_select.clone();
@@ -89,7 +88,7 @@ pub fn TimestampInput<F: Fn(ev::Event) + Clone + 'static>(
                             >
                                 Custom
                             </option>
-                            <Show when={move || custom_time().is_some()} fallback={|_| ()}>
+                            <Show when={move || custom_time().is_some()} fallback={|| ()}>
                                 <option
                                     prop:selected={selected_option() == custom_time()}
                                     value={custom_time}

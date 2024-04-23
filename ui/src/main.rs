@@ -12,8 +12,8 @@ mod utils;
 mod invoke;
 
 fn main() {
-    mount_to_body(|cx| {
-        view! { cx, <App/> }
+    mount_to_body(|| {
+        view! { <App/> }
     })
 }
 
@@ -33,27 +33,28 @@ pub struct GlobalState {
 }
 
 impl GlobalState {
-    fn new(cx: Scope) -> Self {
+    fn new() -> Self {
         Self {
-            state: create_rw_signal(cx, Some("Playing Solo (1 of 5)".to_owned())),
-            details: create_rw_signal(cx, Some("Competitive".to_owned())),
-            timestamp: create_rw_signal(cx, None),
-            large_img_key: create_rw_signal(cx, None),
-            large_img_txt: create_rw_signal(cx, None),
-            small_img_key: create_rw_signal(cx, None),
-            small_img_txt: create_rw_signal(cx, None),
-            first_btn_txt: create_rw_signal(cx, None),
-            first_btn_url: create_rw_signal(cx, None),
-            second_btn_txt: create_rw_signal(cx, None),
-            second_btn_url: create_rw_signal(cx, None),
+            state: create_rw_signal(Some("Playing Solo (1 of 5)".to_owned())),
+            details: create_rw_signal(Some("Competitive".to_owned())),
+            timestamp: create_rw_signal(None),
+            large_img_key: create_rw_signal(None),
+            large_img_txt: create_rw_signal(None),
+            small_img_key: create_rw_signal(None),
+            small_img_txt: create_rw_signal(None),
+            first_btn_txt: create_rw_signal(None),
+            first_btn_url: create_rw_signal(None),
+            second_btn_txt: create_rw_signal(None),
+            second_btn_url: create_rw_signal(None),
         }
     }
 }
 
 #[component]
-fn App(cx: Scope) -> impl IntoView {
-    provide_context(cx, GlobalState::new(cx));
-    view! { cx,
+fn App() -> impl IntoView {
+    provide_context(GlobalState::new());
+
+    view! {
         <div class="flex flex-col h-screen">
             <Header/>
             <div class="grid grid-cols-14 overflow-hidden">

@@ -13,8 +13,8 @@ use MaybeSignal::{
 };
 
 #[component]
-pub fn Main(cx: Scope) -> impl IntoView {
-    let gs = use_context::<GlobalState>(cx).expect("to have found the GlobalState provided");
+pub fn Main() -> impl IntoView {
+    let gs = use_context::<GlobalState>().expect("to have found the GlobalState provided");
     let state = gs.state;
     let details = gs.details;
     let timestamp = gs.timestamp;
@@ -26,7 +26,7 @@ pub fn Main(cx: Scope) -> impl IntoView {
     let first_btn_url = gs.first_btn_url;
     let second_btn_txt = gs.second_btn_txt;
     let second_btn_url = gs.second_btn_url;
-    view! { cx,
+    view! {
         <div class="col-span-8 h-full relative">
             <div class="vertical-hr"></div>
             <div class="p-10 pt-10 grid grid-cols-2 grid-rows-7 gap-y-1.5 gap-x-4">

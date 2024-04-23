@@ -1,8 +1,8 @@
 use leptos::*;
 
 #[component]
-pub fn Header(cx: Scope) -> impl IntoView {
-    view! { cx,
+pub fn Header() -> impl IntoView {
+    view! {
         <div
             id="header"
             class="rounded-b-md relative w-full h-14 bg-dc_nav shadow-dc_black drop-shadow-lg grid grid-cols-3 items-center"
