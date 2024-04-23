@@ -1,3 +1,4 @@
+pub mod error_modal;
 pub mod header;
 pub mod main;
 pub mod sidebar;
