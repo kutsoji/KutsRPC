@@ -138,7 +138,7 @@ pub fn Main(cx: Scope) -> impl IntoView {
 
                 <Input
                     label="URL"
-                    info="change the first button's url"
+                    info="set the first button's url"
                     on_input={Box::new(move |e| {
                         if event_target_value(&e) == "" {
                             first_btn_url.set(None)
@@ -151,7 +151,7 @@ pub fn Main(cx: Scope) -> impl IntoView {
                 />
                 <Input
                     label="BUTTON 2"
-                    info="set the second button"
+                    info="set the second button text"
                     on_input={Box::new(move |e| {
                         if event_target_value(&e) == "" {
                             second_btn_txt.set(None)
@@ -192,7 +192,7 @@ pub fn Main(cx: Scope) -> impl IntoView {
                     <button class="flex justify-center items-center rounded-[4px] h-[30px] p-2 w-full transition-colors duration-200 bg-dc_green hover:bg-[#5baf77] outline-none text-sm font-medium text-dc_white">
                         <span>Connect</span>
                     </button>
-                    <button class="flex justify-center items-center rounded-[4px] h-[30px] p-2 w-full transition-colors duration-200 bg-[#FF0000] hover:bg-[#f23a3a] outline-none text-sm font-medium text-dc_white">
+                    <button class="flex justify-center items-center rounded-[4px] h-[30px] p-2 w-full transition-colors duration-200 bg-[#a8242a] hover:bg-[#c53d3d] outline-none text-sm font-medium text-dc_white">
                         <span>Disconnect</span>
                     </button>
                 </div>

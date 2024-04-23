@@ -1,4 +1,3 @@
-use crate::utils::time;
 use leptos::*;
 #[component]
 pub fn TimestampInput<F: Fn(ev::Event) + Clone + 'static>(
@@ -57,13 +56,13 @@ pub fn TimestampInput<F: Fn(ev::Event) + Clone + 'static>(
                             >
                                 None
                             </option>
-                                <option
-                                    prop:selected={selected_option()
-                                        == Some("SinceDiscordStarted".to_owned())}
-                                    value="SinceDiscordStarted"
-                                >
-                                    Since Discord Started
-                                </option>
+                            <option
+                                prop:selected={selected_option()
+                                    == Some("SinceDiscordStarted".to_owned())}
+                                value="SinceDiscordStarted"
+                            >
+                                Since Discord Started
+                            </option>
                             <option
                                 prop:selected={selected_option()
                                     == Some("SinceKutsRpcStarted".to_owned())}
@@ -96,7 +95,7 @@ pub fn TimestampInput<F: Fn(ev::Event) + Clone + 'static>(
                                     value={custom_time}
                                 >
                                     Custom:
-                                    {time::format_hms_from_unix(custom_time().unwrap())}
+                                    {custom_time}
                                 </option>
                             </Show>
                         </select>
@@ -110,10 +109,9 @@ pub fn TimestampInput<F: Fn(ev::Event) + Clone + 'static>(
                         type="time"
                         step=1
                         value={custom_time}
-                        on:input={move |e| {
-                            custom_time.set(Some(time::to_unix(event_target_value(&e)).to_string()))
-                        }}
+                        on:input={move |e| { custom_time.set(Some(event_target_value(&e))) }}
                     />
+
                     <button
                         on:click={move |_| {
                             selected_option
