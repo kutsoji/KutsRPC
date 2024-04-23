@@ -1,8 +1,4 @@
-use sysinfo::{
-    ProcessExt,
-    System,
-    SystemExt,
-};
+use sysinfo::System;
 #[tauri::command]
 pub fn get_process_start_time(name: String) -> Result<String, String> {
     let mut sys = System::new_all();
