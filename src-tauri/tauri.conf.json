@@ -27,9 +27,6 @@
           "allow": ["**"],
           "requireLiteralLeadingDot": false
         }
-      },
-      "shell": {
-        "open": true
       }
     },
     "bundle": {
