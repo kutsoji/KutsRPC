@@ -11,7 +11,7 @@ pub fn TimestampInput<F: Fn(ev::Event) + Clone + 'static>(
         <div class="space-y-1 text-xs col-span-2">
             <div class="flex items-center space-x-2">
                 <span class="font-semibold text-dc_gray mt-1">{label}</span>
-                <div class="has-tooltip">
+                <div class="has-tooltip icon">
                     <svg
                         class="fill-dc_gray"
                         xmlns="http://www.w3.org/2000/svg"
@@ -112,16 +112,7 @@ pub fn TimestampInput<F: Fn(ev::Event) + Clone + 'static>(
                     />
 
                     <button
-                        on:click={move |_| {
-                            selected_option
-                                .set(
-                                    if custom_time().is_some() {
-                                        Some(custom_time().unwrap())
-                                    } else {
-                                        None
-                                    },
-                                )
-                        }}
+                        on:click={move |_| { selected_option.set(custom_time()) }}
 
                         class="flex items-center justify-center ml-2 rounded-[4px] h-[36px] w-1/5 p-2 transition-colors duration-500 bg-dc_btn outline-none hover:bg-[#676A75] text-sm font-medium text-dc_white"
                     >

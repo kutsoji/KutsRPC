@@ -20,7 +20,7 @@ pub fn ErrorModal<F: Fn(ev::MouseEvent) + 'static + Copy>(
 
                 <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
                     <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                        <div class="relative transform overflow-hidden rounded-lg bg-dc_white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                        <div class="relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                             <div class="bg-dc_black px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                                 <div class="sm:flex sm:items-start">
                                     <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#a8242a] sm:mx-0 sm:h-10 sm:w-10">
@@ -41,7 +41,7 @@ pub fn ErrorModal<F: Fn(ev::MouseEvent) + 'static + Copy>(
                                     </div>
                                     <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                                         <h3
-                                            class="text-base font-semibold leading-6 text-gray-900"
+                                            class="text-base font-semibold leading-6 text-dc_white"
                                             id="modal-title"
                                         >
                                             {title.clone()}
@@ -60,6 +60,7 @@ pub fn ErrorModal<F: Fn(ev::MouseEvent) + 'static + Copy>(
                                         set_open(false);
                                         on_click(e)
                                     }}
+
                                     type="button"
                                     class="inline-flex w-full justify-center rounded-md transition-colors duration-200 bg-[#a8242a] hover:bg-[#c53d3d] px-3 py-2 text-sm font-semibold text-dc_white shadow-sm sm:ml-3 sm:w-auto"
                                 >

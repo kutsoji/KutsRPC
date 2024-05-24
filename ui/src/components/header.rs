@@ -1,15 +1,143 @@
-use leptos::*;
-
+use crate::{
+    components::{
+        alert::*,
+        config_modal::*,
+    },
+    invoke,
+    utils::load,
+    GlobalState,
+};
+use fancy_regex::Regex;
+use leptos::{
+    logging::log,
+    *,
+};
 #[component]
 pub fn Header() -> impl IntoView {
+    let gs = use_context::<GlobalState>().unwrap();
+    let app_id = gs.app_id;
+    let remember = gs.remember;
+    let presets_dir = gs.presets_dir;
+    let minimize = gs.minimize;
+    let current_preset = gs.current_preset;
+
+    let app_id_value: RwSignal<Option<String>> = create_rw_signal(None);
+    let remember_value: RwSignal<bool> = create_rw_signal(false);
+    let presets_dir_value: RwSignal<Option<String>> = create_rw_signal(None);
+    let minimize_value: RwSignal<bool> = create_rw_signal(false);
+
+    let alerts: RwSignal<Vec<(bool, Option<()>)>> = create_rw_signal(vec![(false, None); 2]);
+    create_effect(move |_| {
+        for (i, (alrt, tm)) in alerts.get().iter().enumerate() {
+            if *alrt && tm.is_none() {
+                alerts.update(|alrts| {
+                    alrts[i].1 = Some(set_timeout(
+                        move || {
+                            alerts.update(|alrts| alrts[i].0 = false);
+                        },
+                        std::time::Duration::from_millis(5000),
+                    ))
+                });
+            } else if *alrt && tm.is_some() {
+                tm.unwrap()
+            } else if !*alrt && tm.is_some() {
+                alerts.update(|alrts| alrts[i].1 = None);
+            } else {
+                ()
+            }
+        }
+    });
+
+    let show_config_modal: RwSignal<bool> = create_rw_signal(false);
+    let update_config_action = create_action(move |input: &()| {
+        let c = crate::Config {
+            app_id: {
+                if remember_value.get_untracked() {
+                    app_id_value.get_untracked()
+                } else {
+                    None
+                }
+            },
+            remember: remember_value.get_untracked(),
+            presets_dir: presets_dir_value.get_untracked(),
+            minimize: minimize_value.get_untracked(),
+        };
+
+        async move {
+            invoke!("update_config", {config: crate::Config = c},
+                Result<String, String>
+            );
+            if presets_dir != presets_dir_value {
+                load::config(Some(gs)).await;
+                load::presets(gs).await;
+            } else {
+                load::config(Some(gs)).await;
+            }
+        }
+    });
+
+    create_resource(
+        || (),
+        move |_| async move {
+            match load::config(None).await {
+                Ok(c) => {
+                    app_id_value.set(c.app_id);
+                    remember_value.set(c.remember);
+                    presets_dir_value.set(c.presets_dir);
+                    minimize_value.set(c.minimize);
+                }
+                Err(e) => log!("{}", e.to_string()),
+            }
+        },
+    );
+
     view! {
+        <Show when={move || show_config_modal()} fallback={|| ()}>
+            <ConfigModal
+                on_click={move |e| {
+                    if app_id_value().is_some()
+                        && !Regex::new(r"^(\d{18}|)$")
+                            .unwrap()
+                            .is_match(app_id_value().unwrap().as_str())
+                            .unwrap()
+                    {
+                        alerts.update(|a| a[0].0 = true)
+                    } else {
+                        update_config_action.dispatch(());
+                        show_config_modal.set(false);
+                        alerts.set(vec![(false, None)]);
+                    }
+                }}
+
+                on_cancel={move |e| {
+                    show_config_modal.set(false);
+                    alerts.set(vec![(false, None)]);
+                    app_id_value.set(app_id.get_untracked());
+                    remember_value.set(remember.get_untracked());
+                    presets_dir_value.set(presets_dir.get_untracked());
+                    minimize_value.set(minimize.get_untracked());
+                }}
+
+                app_id={app_id_value}
+                remember={remember_value}
+                presets_dir={presets_dir_value}
+                minimize={minimize_value}
+            />
+            <Show when={move || alerts()[0].0} fallback={|| ()}>
+                <Alert text={"Please enter a valid App ID or leave the field empty. An App ID should consist of 18 digits."
+                    .to_string()}/>
+            </Show>
+        </Show>
         <div
             id="header"
             class="rounded-b-md relative w-full h-14 bg-dc_nav shadow-dc_black drop-shadow-lg grid grid-cols-3 items-center"
         >
 
             <div id="config" class="justify-start">
-                <button class="flex items-center border border-dc_white px-2 py-1 transition-colors rounded-md duration-500 hover:bg-dc_white hover:text-dc_white group text-xs ml-2 hover:drop-shadow-lg hover:shadow-dc_black">
+                <button
+                    on:click={move |_| show_config_modal.set(true)}
+                    class="flex items-center border border-dc_white px-2 py-1 transition-colors rounded-md duration-500 hover:bg-dc_white hover:text-dc_white group text-xs ml-2 hover:drop-shadow-lg hover:shadow-dc_black"
+                >
                     <svg
                         class="h-6 w-6 fill-dc_white fill-current group-hover:fill-dc_black flex-shrink-0"
                         xmlns="http://www.w3.org/2000/svg"
@@ -24,10 +152,22 @@ pub fn Header() -> impl IntoView {
                 </button>
             </div>
             <div id="title" class="font-extrabold text-dc_white justify-self-center">
-                KutsRPC
+                {move || {
+                    if let Some(p) = current_preset() {
+                        format!("KutsRPC - {}", p.name).into_view()
+                    } else {
+                        view! { KutsRPC }.into_view()
+                    }
+                }}
+
             </div>
-            <div id="social" class="flex justify-end items-center space-x-4">
-                <a class="cursor-pointer">
+            <div id="social" class="flex justify-end items-center space-x-4 mr-4">
+                <a
+                    id="discord-link"
+                    target="_blank"
+                    href="https://discord.com/invite/ANDJzywMAP"
+                    class="cursor-pointer"
+                >
                     <svg
                         class="transition-colors duration-300 h-6 w-6 fill-dc_white hover:fill-dc_black fill-current"
                         width="64px"
@@ -51,9 +191,14 @@ pub fn Header() -> impl IntoView {
                     </svg>
                 </a>
 
-                <a class="cursor-pointer">
+                <a
+                    id="github-link"
+                    target="_blank"
+                    href="https://github.com/kutsoji/KutsRPC"
+                    class="cursor-pointer"
+                >
                     <svg
-                        class="transition-colors duration-300 h-6 w-6 mr-4 fill-dc_white hover:fill-dc_black fill-current"
+                        class="transition-colors duration-300 h-6 w-6 fill-dc_white hover:fill-dc_black fill-current"
                         width="64px"
                         height="64px"
                         viewBox="0 0 256.00 256.00"

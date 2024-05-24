@@ -1,5 +1,7 @@
 #![allow(unused)]
 use leptos::*;
+mod structs;
+use structs::*;
 mod components;
 use components::{
     header::*,
@@ -7,6 +9,8 @@ use components::{
     sidebar::*,
     visualizer::*,
 };
+
+use crate::utils::load;
 mod utils;
 #[macro_use]
 mod invoke;
@@ -30,6 +34,12 @@ pub struct GlobalState {
     first_btn_url: RwSignal<Option<String>>,
     second_btn_txt: RwSignal<Option<String>>,
     second_btn_url: RwSignal<Option<String>>,
+    app_id: RwSignal<Option<String>>,
+    remember: RwSignal<bool>,
+    presets_dir: RwSignal<Option<String>>,
+    minimize: RwSignal<bool>,
+    presets: RwSignal<Vec<Preset>>,
+    current_preset: RwSignal<Option<Preset>>,
 }
 
 impl GlobalState {
@@ -46,16 +56,44 @@ impl GlobalState {
             first_btn_url: create_rw_signal(None),
             second_btn_txt: create_rw_signal(None),
             second_btn_url: create_rw_signal(None),
+            app_id: create_rw_signal(None),
+            remember: create_rw_signal(false),
+            presets_dir: create_rw_signal(None),
+            minimize: create_rw_signal(false),
+            presets: create_rw_signal(Vec::new()),
+            current_preset: create_rw_signal(None),
         }
+    }
+
+    pub fn default_activity(&self) -> () {
+        self.state.set(Some("Playing Solo (1 of 5)".to_owned()));
+        self.details.set(Some("Competitive".to_owned()));
+        self.timestamp.set(None);
+        self.large_img_key.set(None);
+        self.large_img_txt.set(None);
+        self.small_img_key.set(None);
+        self.small_img_txt.set(None);
+        self.first_btn_txt.set(None);
+        self.first_btn_url.set(None);
+        self.second_btn_txt.set(None);
+        self.second_btn_url.set(None);
     }
 }
 
 #[component]
 fn App() -> impl IntoView {
     provide_context(GlobalState::new());
+    let gs = use_context::<GlobalState>().unwrap();
+    create_resource(
+        || (),
+        move |_| async move {
+            load::config(Some(gs)).await;
+            load::presets(gs).await;
+        },
+    );
 
     view! {
-        <div class="flex flex-col h-screen">
+        <div on:contextmenu={move |e| e.prevent_default()} class="flex flex-col h-screen">
             <Header/>
             <div class="grid grid-cols-14 overflow-hidden">
                 <Sidebar/>

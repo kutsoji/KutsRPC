@@ -1,10 +1,59 @@
-use leptos::*;
+use leptos::{
+    logging::log,
+    *,
+};
+
+use crate::{
+    components::sidebaricon::*,
+    invoke,
+    GlobalState,
+    Preset,
+};
 
 #[component]
 pub fn Sidebar() -> impl IntoView {
+    let gs = use_context::<GlobalState>().unwrap();
+    let presets = gs.presets;
+    let presets_dir = gs.presets_dir;
+    let current_preset = gs.current_preset;
+
+    let add_preset_action = create_action(move |input: &()| async move {
+        match invoke!("add_preset", {presetsDir: String = presets_dir.get_untracked().unwrap()}, Preset)
+        {
+            Ok(preset) => {
+                if !presets().iter().any(|ps| ps.name == preset.name) {
+                    presets.update(|mutable_presets: &mut Vec<Preset>| {
+                        mutable_presets.push(preset.clone())
+                    })
+                }
+                current_preset.set(Some(preset.clone()));
+            }
+            Err(e) => log!("{}", e.to_string()),
+        }
+    });
+
+    let remove_preset_action = create_action(|preset_path: &String| {
+        let preset_path = preset_path.to_owned();
+        async move {
+            match invoke!("remove_preset", {presetPath: String = preset_path.to_string()}, String) {
+                Ok(_) => (),
+                Err(e) => log!("{}", e.to_string()),
+            }
+        }
+    });
     view! {
-        <div class="col-span-1 h-full overflow-auto">
-            <div class="sidebaricons bg-dc_nav hover:bg-dc_blue group">
+        <div class="col-span-1 h-screen">
+            <div
+                on:click={move |_| {
+                    current_preset.set(None);
+                }}
+
+                class={move || {
+                    "sidebaricons bg-dc_nav hover:bg-dc_blue group ".to_owned()
+                        + if current_preset().is_none() { "active-blue" } else { "" }
+                }}
+            >
+
                 <svg
                     class="duration-150 ease-linear fill-dc_white"
                     width="30px"
@@ -17,15 +66,52 @@ pub fn Sidebar() -> impl IntoView {
                 </svg>
             </div>
             <hr class="sidebar-hr"/>
-            <div class="sidebaricons">1</div>
-            <div class="sidebaricons">2</div>
-            <div class="sidebaricons">3</div>
-            <div class="sidebaricons">4</div>
-            <div class="sidebaricons">5</div>
-            <div class="sidebaricons">6</div>
-            <div class="sidebaricons">7</div>
-            <div class="sidebaricons">8</div>
-            <div class="sidebaricons">9</div>
+            <div class="h-[80%] overflow-y-auto overflow-x-visible inset-0 top-[20%] absolute">
+                <For
+                    each={move || presets().into_iter().enumerate()}
+                    key={|(idx, p)| (*idx, p.name.clone())}
+                    children={move |(i, preset)| {
+                        let stored_preset = store_value(preset.clone());
+                        view! {
+                            <SideBarIcon
+                                preset={preset}
+                                i={i}
+                                current_preset={current_preset}
+                                on_click={move |_| { current_preset.set(Some(stored_preset())) }}
+
+                                on_remove={move |_| {
+                                    remove_preset_action.dispatch(stored_preset().path);
+                                    if let Some(p) = current_preset() {
+                                        if p.name == stored_preset().name {
+                                            current_preset.set(None)
+                                        }
+                                    }
+                                    presets
+                                        .update(|ps| {
+                                            ps.remove(i);
+                                        });
+                                }}
+                            />
+                        }
+                    }}
+                />
+
+                <div
+                    on:click={move |_| add_preset_action.dispatch(())}
+                    class="sidebaricons bg-dc_nav group has-tooltip"
+                >
+                    <svg
+                        class="group-hover:fill-dc_white duration-150 ease-linear fill-dc_green"
+                        width="30px"
+                        height="30px"
+                        viewBox="0 0 30 30"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path d="M24 15c0 0.83 -0.072 1.5 -0.901 1.5H16.5v6.598c0 0.828 -0.67 0.901 -1.5 0.901 -0.83 0 -1.5 -0.074 -1.5 -0.901V16.5H6.902C6.074 16.5 6 15.83 6 15c0 -0.83 0.074 -1.5 0.901 -1.5H13.5V6.902C13.5 6.072 14.17 6 15 6c0.83 0 1.5 0.072 1.5 0.901V13.5h6.598c0.83 0 0.901 0.67 0.901 1.5z"></path>
+                    </svg>
+                    <span class="tooltip-preset">Add a saved preset</span>
+                </div>
+            </div>
         </div>
     }
 }

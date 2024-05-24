@@ -12,4 +12,5 @@ tauri-sys = { git = "https://github.com/JonasKruckenberg/tauri-sys", features = 
   "all",
 ] }
 serde = { version = "1.0.*", features = ["derive"]}
-serde_json = { version = "*" }
+serde_json = { version = "1.0.117" }
+fancy-regex = "0.13.0"

@@ -14,7 +14,8 @@ module.exports = {
             dc_blue: "#5865F2",
             dc_green: "#3BA55D",
             dc_white: "#DCDDDE",
-            dc_btn: "#41434A"
+            dc_btn: "#41434A",
+            black: "#000000"
         },
         fontFamily: {
             'code': ['Fira Code', 'monospace'],

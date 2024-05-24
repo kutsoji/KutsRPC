@@ -4,14 +4,20 @@ pub fn Input(
     label: &'static str,
     info: &'static str,
     #[prop(optional)] main_class: &'static str,
+    #[prop(optional)] extra_html: &'static str,
+    #[prop(optional)] input_id: &'static str,
+    #[prop(optional)] input_type: &'static str,
+    #[prop(optional)] input_class: &'static str,
+    #[prop(optional)] disabled: bool,
+    #[prop(optional)] checked: bool,
     #[prop(optional)] input_value: MaybeSignal<Option<String>>,
     #[prop(optional)] on_input: Option<Box<dyn Fn(ev::Event)>>,
 ) -> impl IntoView {
     view! {
-        <div class={"col-span-1 space-y-1 text-xs ".to_owned() + main_class}>
+        <div class={"space-y-1 text-xs ".to_owned() + main_class}>
             <div class="flex items-center space-x-2">
                 <span class="font-semibold text-dc_gray mt-1">{label}</span>
-                <div class="has-tooltip">
+                <div class="has-tooltip icon">
                     <svg
                         class="fill-dc_gray"
                         xmlns="http://www.w3.org/2000/svg"
@@ -38,11 +44,15 @@ pub fn Input(
                 </div>
             </div>
             <input
+                prop:id={input_id}
                 on:input={on_input.unwrap_or(Box::new(|_e: ev::Event| {}))}
                 prop:value={move || input_value().or(Some("".to_owned()))}
-
-                class="w-full bg-dc_nav rounded p-2 h-[36px] outline-none border-[1px] border-[#68696b] hover:border-dc_blue text-dc_white font-normal"
+                type={input_type}
+                class={input_class}
+                prop:disabled={disabled}
+                prop:checked={checked}
             />
+            <div class="relative" inner_html={extra_html}></div>
         </div>
     }
 }

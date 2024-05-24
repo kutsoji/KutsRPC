@@ -1,5 +1,9 @@
+pub mod alert;
+pub mod config_modal;
+pub mod create_preset_modal;
 pub mod error_modal;
 pub mod header;
 pub mod main;
 pub mod sidebar;
+pub mod sidebaricon;
 pub mod visualizer;

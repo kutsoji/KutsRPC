@@ -30,7 +30,7 @@ pub fn Visualizer() -> impl IntoView {
         std::time::Duration::from_millis(1000),
     );
     view! {
-        <div class="col-span-5 h-full ">
+        <div class="col-span-5 h-full relative">
             <div class="vertical-hr"></div>
             <div class="p-20 relative">
                 <div class="bg-dc_blue rounded-t-lg w-[300px] h-[70px] z-10"></div>
@@ -53,7 +53,7 @@ pub fn Visualizer() -> impl IntoView {
                     {move || {
                         if large_img_key().is_some() {
                             view! {
-                                <div class="row-span-4 col-span-2 has-tooltip">
+                                <div class="row-span-4 col-span-2 has-tooltip icon">
                                     <img
                                         prop:src={move || {
                                             if large_img_key() == Some("".to_owned())
@@ -78,7 +78,7 @@ pub fn Visualizer() -> impl IntoView {
                     {move || {
                         if small_img_key().is_some() && large_img_key().is_some() {
                             view! {
-                                <div class="has-tooltip absolute bottom-[3px] left-[65px] z-20 transform translate-x-[-50%] translate-y-[45%]">
+                                <div class="has-tooltip icon absolute bottom-[3px] left-[65px] z-20 transform translate-x-[-50%] translate-y-[45%]">
                                     <img
                                         prop:src={move || {
                                             if small_img_key() == Some("".to_owned())
@@ -185,17 +185,17 @@ pub fn Visualizer() -> impl IntoView {
                             fallback={move || {
                                 view! {
                                     <button class="col-span-2 flex justify-center items-center rounded-[4px] h-[30px] p-2 w-full transition-colors duration-500 bg-dc_btn outline-none hover:bg-[#676A75] text-sm font-medium text-dc_white">
-                                        <span>{first_btn_txt}</span>
+                                        <span class="w-full truncate">{first_btn_txt}</span>
                                     </button>
                                 }
                             }}
                         >
 
                             <button class="flex justify-center items-center rounded-[4px] h-[30px] p-2 w-full transition-colors duration-500 bg-dc_btn outline-none hover:bg-[#676A75] text-sm font-medium text-dc_white">
-                                <span>{first_btn_txt}</span>
+                                <span class="w-full truncate">{first_btn_txt}</span>
                             </button>
                             <button class="flex justify-center items-center rounded-[4px] h-[30px] p-2 w-full transition-colors duration-500 bg-dc_btn outline-none hover:bg-[#676A75] text-sm font-medium text-dc_white">
-                                <span>{second_btn_txt}</span>
+                                <span class="w-full truncate">{second_btn_txt}</span>
                             </button>
                         </Show>
                     </Show>

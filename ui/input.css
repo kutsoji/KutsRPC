@@ -6,6 +6,7 @@
   html {
     @apply font-code font-semibold bg-dc_black;
   }
+
   * {
     @apply unselectable;
   }
@@ -13,21 +14,48 @@
 
 @layer components {
   .sidebaricons {
-    @apply flex justify-center items-center mt-1.5 mb-1.5 ml-4 w-[54px] h-[54px] 
-        rounded-[1.7rem] duration-150 hover:rounded-[1.1rem] transition-all ease-linear 
-        bg-dc_nav hover:bg-dc_green text-dc_green hover:text-dc_white
-        cursor-pointer;
+    @apply flex justify-center items-center mt-1.5 mb-1.5 ml-4 w-[54px] h-[54px] rounded-[1.7rem] 
+    duration-150 hover:rounded-[1.1rem] transition-all ease-linear bg-dc_nav hover:bg-dc_green 
+    text-dc_green hover:text-dc_white overflow-hidden cursor-pointer;
+  }
+
+  .sidebaricons.active {
+    @apply bg-dc_green rounded-[1.1rem] text-dc_white;
+  }
+
+  .sidebaricons.active-blue {
+    @apply bg-dc_blue rounded-[1.1rem] text-dc_white;
   }
 
   .sidebar-hr {
-    @apply border w-[32px] ml-[1.64rem] border-dc_nav rounded-lg;
+    @apply border w-[32px] ml-[1.68rem] border-dc_nav rounded-lg;
   }
 
   .vertical-hr {
-    @apply w-0.5 h-[95%] bg-dc_nav ml-0 absolute top-1/2 transform -translate-y-1/2 rounded-lg;
+    @apply w-0.5 h-[88%] bg-dc_nav ml-0 absolute top-[46%] transform -translate-y-1/2 rounded-lg;
   }
+
+  .input-text {
+    @apply w-full bg-dc_nav rounded p-2 h-[36px] outline-none border-[1px] border-[#68696b] 
+  hover:border-dc_blue text-dc_white font-normal;
+  }
+
+  .input-checkbox {
+    @apply appearance-none cursor-pointer rounded border border-dc_gray checked:bg-dc_white 
+    checked:border-none h-[24px] w-[24px];
+  }
+
+  #remember_checkbox:checked+div>label>svg {
+    @apply block;
+  }
+
+  #minimize_checkbox:checked+div>label>svg {
+    @apply block;
+  }
+
   .tooltip {
-    @apply invisible absolute rounded shadow-lg bg-dc_black text-dc_gray whitespace-normal text-center;
+    @apply invisible absolute rounded shadow-lg bg-dc_black text-dc_gray
+    whitespace-normal text-center;
     top: 50%;
     left: 50%;
     transform: translate(-50%, calc(-100% - 8px));
@@ -44,12 +72,41 @@
     @apply border-t-dc_black border-t-[5px];
   }
 
-  .has-tooltip {
+  .icon {
     @apply relative inline-block;
   }
 
   .has-tooltip:hover .tooltip {
-    @apply visible z-40;
+    @apply visible z-30;
+  }
+
+  .tooltip-preset {
+    @apply hidden z-30 transition-colors duration-100 min-w-[130px] max-w-[500px] p-2 absolute rounded
+    shadow-lg bg-black text-dc_gray text-center text-sm;
+    left: 6.5%;
+    transform: translate(calc(5px), 0%);
+  }
+
+  .tooltip-preset::before {
+    @apply absolute w-0 h-0 block;
+    content: "";
+    top: 50%;
+    right: 100%;
+    transform: translateY(-50%);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    @apply border-r-black border-r-[5px];
+  }
+
+  .has-tooltip:hover .tooltip-preset {
+    @apply block;
+  }
+
+  .remove-preset-container {
+    @apply z-40 transition-colors duration-100 h-[50px] p-2 absolute rounded
+    shadow-lg bg-dc_nav text-dc_gray text-center text-sm;
+    left: 6%;
+    transform: translate(calc(5px), 14%);
   }
 }
 
@@ -74,36 +131,40 @@
 }
 
 input[type="time"]::-webkit-calendar-picker-indicator {
-    filter: grayscale(1) brightness(0.9) sepia(0.1) saturate(0) hue-rotate(0deg) invert(0.7);
+  filter: grayscale(1) brightness(0.9) sepia(0.1) saturate(0) hue-rotate(0deg) invert(0.7);
 }
 
-@font-face {
-  font-family: 'Fira Code';
-  src: url('./assets/fonts/FiraCode-Regular.ttf') format('trueype');
+input[type="file"]::file @font-face {
+  font-family: "Fira Code";
+  src: url("./assets/fonts/FiraCode-Regular.ttf") format("trueype");
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
-  font-family: 'Fira Code';
-  src: url('./assets/fonts/FiraCode-Light.ttf') format('trueype');
+  font-family: "Fira Code";
+  src: url("./assets/fonts/FiraCode-Light.ttf") format("trueype");
   font-weight: light;
   font-style: normal;
 }
+
 @font-face {
-  font-family: 'Fira Code';
-  src: url('./assets/fonts/FiraCode-Medium.ttf') format('trueype');
+  font-family: "Fira Code";
+  src: url("./assets/fonts/FiraCode-Medium.ttf") format("trueype");
   font-weight: medium;
   font-style: normal;
 }
+
 @font-face {
-  font-family: 'Fira Code';
-  src: url('./assets/fonts/FiraCode-SemiBold.ttf') format('trueype');
+  font-family: "Fira Code";
+  src: url("./assets/fonts/FiraCode-SemiBold.ttf") format("trueype");
   font-weight: 600;
   font-style: normal;
 }
+
 @font-face {
-  font-family: 'Fira Code';
-  src: url('./assets/fonts/FiraCode-Bold.ttf') format('trueype');
+  font-family: "Fira Code";
+  src: url("./assets/fonts/FiraCode-Bold.ttf") format("trueype");
   font-weight: bold;
   font-style: normal;
 }
